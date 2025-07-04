@@ -9,10 +9,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
 
         body {
@@ -426,8 +422,6 @@
             color: #ffffff;
             font-size: 14px;
         }
-
-        /* إزالة أيقونة القلب */
 
         /* صفحة تفاصيل الأنمي */
         .anime-details-page {
@@ -1157,7 +1151,6 @@
             <ul class="nav-menu">
                 <li class="nav-item"><a href="#" onclick="showPage('home')" class="active">الرئيسية</a></li>
                 <li class="nav-item"><a href="#" onclick="showPage('anime-list')">قائمة الأنمي</a></li>
-                <li class="nav-item"><a href="#" onclick="showPage('favorites')">المفضلة</a></li>
                 <li class="nav-item"><a href="#" onclick="showPage('season')">أنميات الموسم</a></li>
                 <li class="nav-item"><a href="#" onclick="showPage('schedule')">مواعيد الحلقات</a></li>
             </ul>
@@ -1297,7 +1290,7 @@
                     <!-- قسم التعليقات المحسن -->
                     <div class="comments-section">
                         <h3>
-                            💬 الشات العام
+                            💬 الشات العام - يراه جميع المستخدمين
                             <span class="comments-count" id="commentsCount">0</span>
                             <span class="live-chat-indicator">🔴 مباشر</span>
                         </h3>
@@ -1309,12 +1302,12 @@
                         <div class="comment-form" id="commentForm">
                             <textarea 
                                 id="commentInput" 
-                                placeholder="شارك رأيك في هذا الأنمي... سيراه جميع مشاهدي الأنمي! (الحد الأقصى 500 حرف)"
+                                placeholder="شارك رأيك مع جميع المستخدمين! سيراه الكل في الشات العام (الحد الأقصى 500 حرف)"
                                 maxlength="500"
                             ></textarea>
                             <div class="comment-form-footer">
                                 <span class="comment-char-count" id="charCount">0/500</span>
-                                <button type="button" onclick="submitComment()" id="submitCommentBtn">إرسال تعليق 💬</button>
+                                <button type="button" onclick="submitComment()" id="submitCommentBtn">إرسال للجميع 💬</button>
                             </div>
                         </div>
                         
@@ -1348,16 +1341,6 @@
             <div class="content-section">
                 <h2 class="section-title">قائمة الأنمي الكاملة</h2>
                 <div class="anime-grid" id="fullAnimeList">
-                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحة المفضلة -->
-        <div id="favorites" class="page">
-            <div class="content-section">
-                <h2 class="section-title">قائمة المفضلة</h2>
-                <div class="anime-grid" id="favoritesList">
                     <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
                 </div>
             </div>
@@ -1506,7 +1489,7 @@
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         let users = JSON.parse(localStorage.getItem('users')) || {};
         let comments = JSON.parse(localStorage.getItem('globalComments')) || {}; // تغيير إلى globalComments
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+        // متغيرات عامة - تم حذف المفضلة
         let pageHistory = ['home'];
         let currentAnimeId = null;
         let viewerInterval = null;
@@ -1723,10 +1706,8 @@
             // تحميل المحتوى حسب الصفحة
             if (pageId === 'anime-list') {
                 loadFullAnimeList();
-            } else if (pageId === 'home') {
-                loadAnimeSections();
-            } else if (pageId === 'favorites') {
-                loadFavorites();
+            } else if (pageId === 'season') {
+                loadCurrentSeasonAnime();
             }
 
             // إضافة الصفحة لتاريخ التنقل
@@ -1808,10 +1789,10 @@
             `;
         }
 
-        // وظيفة تحميل المفضلة - محذوفة مؤقتاً
-        function loadFavorites() {
-            const favoritesList = document.getElementById('favoritesList');
-            favoritesList.innerHTML = '<p class="no-content">ميزة المفضلة غير متاحة حالياً</p>';
+        // وظيفة تحميل أنميات الموسم الحالي
+        function loadCurrentSeasonAnime() {
+            const currentSeasonList = document.getElementById('currentSeasonAnime');
+            currentSeasonList.innerHTML = animeData.map(createAnimeCard).join('');
         }
 
         // وظيفة لتحميل الأنميات في الأقسام المختلفة
@@ -1840,6 +1821,11 @@
         // وظيفة لتحميل قائمة الأنمي الكاملة
         function loadFullAnimeList() {
             document.getElementById('fullAnimeList').innerHTML = animeData.map(createAnimeCard).join('');
+        }
+
+        // وظيفة لفتح نافذة تفاصيل الأنمي
+        function openAnimeModal(animeId) {
+            showAnimeDetails(animeId);
         }
 
         // وظيفة لعرض تفاصيل الأنمي
@@ -2385,72 +2371,68 @@
             }
         }
 
-        // وظائف التعليقات العامة - شات عام للجميع
-        function loadComments() {
+        // تحميل التعليقات من الخادم للأنمي المحدد
+        async function loadComments() {
             const commentsListDiv = document.getElementById('commentsList');
             const commentsCountSpan = document.getElementById('commentsCount');
             
             // إظهار رسالة التحميل
             commentsListDiv.innerHTML = '<div class="comment-loading">جاري تحميل التعليقات...</div>';
             
-            // تحميل جميع التعليقات العامة من localStorage
-            const savedComments = localStorage.getItem('globalComments');
-            let allComments = [];
-            if (savedComments) {
-                try {
-                    const parsedComments = JSON.parse(savedComments);
-                    // جمع جميع التعليقات من جميع الأنميات في مصفوفة واحدة
-                    allComments = parsedComments.global || [];
-                } catch (e) {
-                    console.error('خطأ في قراءة التعليقات:', e);
-                    allComments = [];
+            try {
+                // تحديد معرف الأنمي الحالي
+                const animeId = currentAnimeId || 0;
+                
+                // تحميل التعليقات من الخادم للأنمي المحدد
+                const response = await fetch(`/api/comments/${animeId}`);
+                if (!response.ok) {
+                    throw new Error('فشل في تحميل التعليقات');
                 }
-            }
-            
-            commentsCountSpan.textContent = allComments.length;
-            lastMessageCount = allComments.length;
+                
+                const allComments = await response.json();
+                
+                commentsCountSpan.textContent = allComments.length;
+                lastMessageCount = allComments.length;
 
-            if (allComments.length === 0) {
-                commentsListDiv.innerHTML = `<p style="text-align: center; color: #aaa; padding: 20px;">💬 لا توجد تعليقات بعد. كن أول من يعلق!</p>`;
-                return;
-            }
-
-            // ترتيب التعليقات من الأقدم للأحدث
-            allComments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-            commentsListDiv.innerHTML = '';
-            allComments.forEach(comment => {
-                const commentItem = document.createElement('div');
-                commentItem.classList.add('comment-item');
-                commentItem.innerHTML = `
-                    <img class="comment-avatar" src="${comment.avatar}" alt="صورة المستخدم">
-                    <div class="comment-content">
+                if (allComments.length === 0) {
+                    commentsListDiv.innerHTML = `<p style="text-align: center; color: #aaa; padding: 20px;">💬 لا توجد تعليقات بعد. كن أول من يعلق!</p>`;
+                    return;
+                }
+                
+                // ترتيب التعليقات من الأحدث للأقدم
+                allComments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                // عرض التعليقات
+                commentsListDiv.innerHTML = allComments.map(comment => `
+                    <div class="comment-item">
                         <div class="comment-header">
-                            <div class="comment-author">${comment.username}</div>
-                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                            <img src="${comment.avatar}" alt="صورة المستخدم" class="comment-avatar">
+                            <div class="comment-info">
+                                <span class="comment-username">${comment.username}</span>
+                                <span class="comment-time">${getTimeAgo(comment.timestamp)}</span>
+                            </div>
                         </div>
                         <div class="comment-text">${comment.text}</div>
                     </div>
-                `;
-                commentsListDiv.appendChild(commentItem);
-            });
-            
-            // التمرير لأسفل لإظهار أحدث التعليقات
-            setTimeout(() => {
-                commentsListDiv.scrollTop = commentsListDiv.scrollHeight;
-            }, 100);
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                commentsListDiv.innerHTML = '<div class="comment-loading">خطأ في تحميل التعليقات</div>';
+            }
         }
 
         // دالة التحديث التلقائي للشات العام
-        function startChatAutoUpdate() {
+        async function startChatAutoUpdate() {
             // إيقاف أي تحديث سابق
             if (chatUpdateInterval) {
                 clearInterval(chatUpdateInterval);
             }
             
             // تحديث التعليقات كل 3 ثوانٍ
-            chatUpdateInterval = setInterval(() => {
-                // إعادة تحميل التعليقات من localStorage
+            chatUpdateInterval = setInterval(async () => {
+                // إعادة تحميل التعليقات من الخادم
+                await loadComments();
                 const savedComments = localStorage.getItem('globalComments');
                 let allComments = [];
                 if (savedComments) {
@@ -2465,17 +2447,11 @@
                 
                 const currentMessageCount = allComments.length;
                 
-                // إذا كان هناك تعليقات جديدة، حدث العرض
-                if (currentMessageCount > lastMessageCount) {
-                    loadComments();
-                    // إظهار إشعار بالتعليقات الجديدة
-                    showMessage(`📩 ${currentMessageCount - lastMessageCount} تعليق جديد!`, 'success');
-                }
             }, 3000);
         }
 
-        // إرسال التعليق للشات العام
-        function submitComment() {
+        // إرسال التعليق للشات الخاص بالأنمي المحدد
+        async function submitComment() {
             const commentInput = document.getElementById('commentInput');
             const commentText = commentInput.value.trim();
             
@@ -2515,29 +2491,24 @@
                 const newComment = {
                     username: currentUser.username || 'مستخدم',
                     text: commentText,
-                    avatar: currentUser.avatar || 'https://via.placeholder.com/40x40/6495ed/ffffff?text=U',
-                    timestamp: new Date().toISOString()
+                    avatar: currentUser.avatar || 'https://via.placeholder.com/40x40/6495ed/ffffff?text=U'
                 };
 
-                // تحميل التعليقات الحالية
-                const savedComments = localStorage.getItem('globalComments');
-                let allComments = { global: [] };
-                if (savedComments) {
-                    try {
-                        allComments = JSON.parse(savedComments);
-                        if (!allComments.global) {
-                            allComments.global = [];
-                        }
-                    } catch (e) {
-                        allComments = { global: [] };
-                    }
-                }
+                // تحديد معرف الأنمي الحالي
+                const animeId = currentAnimeId || 0;
 
-                // إضافة التعليق الجديد للشات العام
-                allComments.global.push(newComment);
-                
-                // حفظ في localStorage
-                localStorage.setItem('globalComments', JSON.stringify(allComments));
+                // إرسال التعليق إلى الخادم للأنمي المحدد
+                const response = await fetch(`/api/comments/${animeId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newComment)
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل في إرسال التعليق');
+                }
                 
                 // تحديث وقت آخر إرسال
                 lastSubmitTime = currentTime;
@@ -2547,7 +2518,7 @@
                 updateCharCount();
                 
                 // إعادة تحميل التعليقات لإظهار التعليق الجديد
-                loadComments();
+                await loadComments();
                 
                 // إظهار رسالة نجاح
                 showMessage(`تم إرسال تعليقك بنجاح! سيراه جميع المستخدمين 💬`, 'success');
@@ -2559,7 +2530,7 @@
                 // إعادة تفعيل الزر بعد ثانية واحدة
                 setTimeout(() => {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'إرسال تعليق 💬';
+                    submitBtn.textContent = 'إرسال للجميع 💬';
                 }, 1000);
             }
         }
@@ -2576,17 +2547,34 @@
             const commentTime = new Date(timestamp);
             const diffInSeconds = Math.floor((now - commentTime) / 1000);
             
-            if (diffInSeconds < 60) {
+            if (diffInSeconds < 10) {
                 return 'الآن';
+            } else if (diffInSeconds < 60) {
+                return `منذ ${diffInSeconds} ثانية`;
             } else if (diffInSeconds < 3600) {
                 const minutes = Math.floor(diffInSeconds / 60);
-                return `منذ ${minutes} دقيقة`;
+                const seconds = diffInSeconds % 60;
+                if (seconds > 0) {
+                    return `منذ ${minutes} دقيقة و ${seconds} ثانية`;
+                } else {
+                    return `منذ ${minutes} دقيقة`;
+                }
             } else if (diffInSeconds < 86400) {
                 const hours = Math.floor(diffInSeconds / 3600);
-                return `منذ ${hours} ساعة`;
+                const minutes = Math.floor((diffInSeconds % 3600) / 60);
+                if (minutes > 0) {
+                    return `منذ ${hours} ساعة و ${minutes} دقيقة`;
+                } else {
+                    return `منذ ${hours} ساعة`;
+                }
             } else {
                 const days = Math.floor(diffInSeconds / 86400);
-                return `منذ ${days} يوم`;
+                const hours = Math.floor((diffInSeconds % 86400) / 3600);
+                if (hours > 0) {
+                    return `منذ ${days} يوم و ${hours} ساعة`;
+                } else {
+                    return `منذ ${days} يوم`;
+                }
             }
         }
 
