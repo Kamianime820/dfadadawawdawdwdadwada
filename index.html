@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kmai Anime - موقع الأنمي </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000, #1a1a2e);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* شريط التنقل */
+        .navbar {
+            background: rgba(15, 15, 35, 0.95);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0, 29, 82, 0.3);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: rgba(100, 149, 237, 0.2);
+            border: 1px solid #18026871;
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: none; /* مخفي افتراضيا */
+        }
+
+        .back-btn:hover {
+            background: #6495ed;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 15px rgba(100, 149, 237, 0.6);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-item a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            background: rgb(7, 1, 56);
+            border-color: #050233;
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: #e0e0e0;
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #6495ed;
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #2d0292, #140042);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 149, 237, 0.4);
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* الصفحات */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الصفحة الرئيسية */
+        .hero-slider {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            margin: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            touch-action: pan-y;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .hero-slider:active {
+            cursor: grabbing;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .slides-wrapper {
+            display: flex;
+            width: 400%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            width: 25%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .slide-content {
+            text-align: center;
+            background: rgba(15, 15, 35, 0.8);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+        }
+
+        .slide-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            color: #f0f0f0;
+        }
+
+        .slide-episode {
+            font-size: 22px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .watch-btn {
+            background: linear-gradient(45deg, #2d0292, #140042);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .watch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 149, 237, 0.4);
+        }
+
+        .slide-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(224, 224, 224, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+        }
+
+        .indicator.active {
+            background: #6495ed;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(100, 149, 237, 0.6);
+        }
+
+        /* أقسام المحتوى */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: rgba(26, 26, 46, 0.1);
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(100, 149, 237, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 26px;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #2c007c, #c8bddb);
+            border-radius: 2px;
+        }
+
+        .more-btn {
+            background: linear-gradient(45deg, #2c007c, #2c007c);
+            color: rgb(255, 255, 255);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(100, 149, 237, 0.4);
+        }
+
+        /* شبكة الأنمي - محدثة لإزالة الفراغات */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        /* شبكة المزيد - عرض 5 أعمدة و 2 صفوف */
+        .more-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .anime-card {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            width: 100%;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* بطاقات الأنمي في صفحة المزيد */
+        .more-grid .anime-card {
+            height: 280px;
+        }
+
+        .more-grid .anime-image {
+            height: 200px;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(250, 250, 250, 0.2);
+            border-color: #2c007c;
+        }
+
+        .anime-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #1a1a2e, #2d2d5a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .anime-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .anime-card:hover .anime-image::before {
+            left: 100%;
+        }
+
+        .anime-info {
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .anime-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #f0f0f0;
+            font-weight: 500;
+        }
+
+        .anime-episode {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        /* إزالة أيقونة القلب */
+
+        /* صفحة تفاصيل الأنمي */
+        .anime-details-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .video-section {
+            flex: 2;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+        }
+
+        .video-player {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .video-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .episodes-section {
+            flex: 1;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .episodes-title {
+            font-size: 22px;
+            color: #e5e5e7;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .episode-item {
+            background: rgba(15, 15, 35, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .episode-item:hover {
+            background: rgba(100, 149, 237, 0.2);
+            transform: translateX(-5px);
+            border-color: #6495ed;
+        }
+
+        .episode-item.active {
+            background: rgba(100, 149, 237, 0.3);
+            border-color: #010d53;
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .search-container {
+                display: none;
+            }
+            
+            .anime-details-page {
+                flex-direction: column;
+            }
+            
+            .video-player {
+                height: 300px;
+            }
+            
+            .anime-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+                padding: 0 5px;
+            }
+            
+            .anime-card {
+                height: 280px;
+            }
+            
+            .anime-image {
+                height: 200px;
+            }
+
+            /* تحسين شبكة المزيد للهواتف */
+            .more-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+                gap: 10px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .anime-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 8px;
+            }
+            
+            .anime-card {
+                height: 260px;
+            }
+            
+            .anime-image {
+                height: 180px;
+            }
+
+            /* شبكة المزيد للشاشات الصغيرة جداً */
+            .more-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            /* تحسين شبكة المزيد للتابلت */
+            .more-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: auto;
+            }
+        }
+
+        /* شريط التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 15, 35, 0.6);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #6495ed, #87ceeb);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #87ceeb, #6495ed);
+        }
+
+        /* أنماط تسجيل الدخول/التسجيل */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            padding-top: 60px;
+        }
+
+        .auth-modal-content {
+            background-color: #1a1a2e;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-modal-content h2 {
+            text-align: center;
+            color: #6495ed;
+            margin-bottom: 20px;
+        }
+
+        .auth-modal-content input[type="email"],
+        .auth-modal-content input[type="password"],
+        .auth-modal-content input[type="text"],
+        .auth-modal-content input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            background-color: #0f0f2a;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .auth-modal-content input[type="email"]:focus,
+        .auth-modal-content input[type="password"]:focus,
+        .auth-modal-content input[type="text"]:focus {
+            outline: none;
+            border-color: #6495ed;
+            box-shadow: 0 0 8px rgba(100, 149, 237, 0.5);
+        }
+
+        .auth-modal-content button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #2d0292, #140042);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-modal-content button:hover {
+            background: linear-gradient(45deg, #140042, #2d0292);
+        }
+
+        .auth-modal-content p {
+            text-align: center;
+            margin-top: 15px;
+            color: #e0e0e0;
+        }
+
+        .auth-modal-content p a {
+            color: #6495ed;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .auth-modal-content p a:hover {
+            text-decoration: underline;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+
+        .user-info button {
+            background: none;
+            border: 1px solid #6495ed;
+            color: #6495ed;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-info button:hover {
+            background: #6495ed;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6495ed;
+        }
+
+        /* قسم التعليقات المحسن */
+        .comments-section {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+        }
+
+        .comments-section h3 {
+            font-size: 22px;
+            color: #e5e5e7;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comments-count {
+            background: rgba(100, 149, 237, 0.2);
+            color: #6495ed;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .comment-form {
+            margin-bottom: 20px;
+            background: rgba(15, 15, 35, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            background-color: #0f0f2a;
+            color: #ffffff;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: #6495ed;
+            box-shadow: 0 0 8px rgba(100, 149, 237, 0.5);
+        }
+
+        .comment-form textarea::placeholder {
+            color: #888;
+        }
+
+        .comment-form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comment-char-count {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .comment-char-count.warning {
+            color: #ffc107;
+        }
+
+        .comment-char-count.error {
+            color: #ff4444;
+        }
+
+        .comment-form button {
+            background: linear-gradient(45deg, #2d0292, #140042);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .comment-form button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 149, 237, 0.4);
+        }
+
+        .comment-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .comments-list {
+            background: rgba(15, 15, 35, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            display: flex;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .comment-item:hover {
+            background: rgba(26, 26, 46, 0.8);
+            border-color: rgba(100, 149, 237, 0.4);
+        }
+
+        .comment-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .comment-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6495ed;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #6495ed;
+            font-size: 16px;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .comment-text {
+            color: #e0e0e0;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .viewer-count {
+            font-size: 14px;
+            color: #ffffff;
+            margin-top: 10px;
+            text-align: center;
+            background: rgba(100, 149, 237, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .live-chat-indicator {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: normal;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* صفحة المزيد */
+        .more-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .more-page h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6495ed;
+        }
+
+        .more-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* رسالة عدم وجود محتوى */
+        .no-content {
+            text-align: center;
+            color: #aaa;
+            font-size: 18px;
+            padding: 40px;
+        }
+
+        /* إشعار التحقق من البريد الإلكتروني */
+        .email-verification-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* مربع التعليق المرسل */
+        .sent-comment-preview {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sent-comment-preview .comment-item {
+            margin-bottom: 0;
+            background: rgba(15, 15, 35, 0.6);
+        }
+
+        .sent-comment-preview h4 {
+            color: #6495ed;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        /* تحسينات للتعليقات */
+        .comment-loading {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .comment-error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+
+        .comment-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* تحسينات السلايدر */
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 15, 35, 0.8);
+            border: 1px solid rgba(100, 149, 237, 0.3);
+            color: #ffffff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .slider-nav-btn:hover {
+            background: rgba(100, 149, 237, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-prev {
+            left: 20px;
+        }
+
+        .slider-next {
+            right: 20px;
+        }
+
+        /* تحذير الأمان */
+        .security-warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .security-warning h2 {
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .security-warning p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .security-warning button {
+            background: #fff;
+            color: #ff0000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .slider-nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .slider-prev {
+                left: 10px;
+            }
+            
+            .slider-next {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- تحذير الأمان -->
+    <div id="securityWarning" class="security-warning">
+        <h2>⚠️ تحذير أمني ⚠️</h2>
+        <p>تم اكتشاف محاولة وصول غير مصرح بها لأدوات المطور!</p>
+        <p>هذا الموقع محمي ضد الاختراق والتلاعب.</p>
+        <p>سيتم تسجيل عنوان IP الخاص بك وإبلاغ السلطات المختصة.</p>
+        <button onclick="closeSecurityWarning()">فهمت</button>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-right">
+                <a href="#" class="back-btn" id="backBtn" onclick="goBack()">← العودة</a>
+                <a href="#" class="logo" onclick="showPage('home')">Kmai Anime</a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" onclick="showPage('home')" class="active">الرئيسية</a></li>
+                <li class="nav-item"><a href="#" onclick="showPage('anime-list')">قائمة الأنمي</a></li>
+                <li class="nav-item"><a href="#" onclick="showPage('favorites')">المفضلة</a></li>
+                <li class="nav-item"><a href="#" onclick="showPage('season')">أنميات الموسم</a></li>
+                <li class="nav-item"><a href="#" onclick="showPage('schedule')">مواعيد الحلقات</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="ابحث عن أنمي..." id="searchInput">
+                <button class="search-btn" onclick="searchAnime()">بحث</button>
+            </div>
+
+            <div class="user-auth" id="userAuth">
+                <button class="more-btn" onclick="openLoginModal()">تسجيل الدخول</button>
+                <button class="more-btn" onclick="openRegisterModal()">إنشاء حساب</button>
+            </div>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <img id="userAvatar" class="user-avatar" src="https://via.placeholder.com/40x40/6495ed/ffffff?text=U" alt="صورة المستخدم">
+                مرحباً, <span id="usernameDisplay"></span>!
+                <button onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- الصفحة الرئيسية -->
+        <div id="home" class="page active">
+            <!-- السلايدر الرئيسي المحسن -->
+            <div class="hero-slider" id="heroSlider">
+                <div class="slider-container">
+                    <div class="slides-wrapper" id="slidesWrapper">
+                        <div class="slide" style="background-image: linear-gradient(rgba(15,15,35,0.7), rgba(15,15,35,0.7)), url('https://via.placeholder.com/1200x500/ff6b35/ffffff?text=One+Piece');">
+                            <div class="slide-content">
+                                <h1 class="slide-title">One Piece</h1>
+                                <div class="slide-episode">الحلقة 1134</div>
+                                <a href="#" class="watch-btn" onclick="watchAnime(1, 1134)">مشاهدة الآن</a>
+                            </div>
+                        </div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(15,15,35,0.7), rgba(15,15,35,0.7)), url('https://via.placeholder.com/1200x500/f7931e/ffffff?text=Naruto');">
+                            <div class="slide-content">
+                                <h1 class="slide-title">Naruto Shippuden</h1>
+                                <div class="slide-episode">الحلقة 720</div>
+                                <a href="#" class="watch-btn" onclick="watchAnime(2, 720)">مشاهدة الآن</a>
+                            </div>
+                        </div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(15,15,35,0.7), rgba(15,15,35,0.7)), url('https://via.placeholder.com/1200x500/4caf50/ffffff?text=My+Hero+Academia');">
+                            <div class="slide-content">
+                                <h1 class="slide-title">My Hero Academia</h1>
+                                <div class="slide-episode">الحلقة 138</div>
+                                <a href="#" class="watch-btn" onclick="watchAnime(3, 138)">مشاهدة الآن</a>
+                            </div>
+                        </div>
+                        <div class="slide" style="background-image: linear-gradient(rgba(15,15,35,0.7), rgba(15,15,35,0.7)), url('https://via.placeholder.com/1200x500/424242/ffffff?text=Death+Note');">
+                            <div class="slide-content">
+                                <h1 class="slide-title">Death Note</h1>
+                                <div class="slide-episode">الحلقة 37</div>
+                                <a href="#" class="watch-btn" onclick="watchAnime(4, 37)">مشاهدة الآن</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- أزرار التنقل -->
+                    <button class="slider-nav-btn slider-prev" onclick="changeSlide(-1)">‹</button>
+                    <button class="slider-nav-btn slider-next" onclick="changeSlide(1)">›</button>
+                    
+                    <!-- مؤشرات السلايدر -->
+                    <div class="slide-indicators">
+                        <span class="indicator active" onclick="currentSlide(1)"></span>
+                        <span class="indicator" onclick="currentSlide(2)"></span>
+                        <span class="indicator" onclick="currentSlide(3)"></span>
+                        <span class="indicator" onclick="currentSlide(4)"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- آخر الحلقات المضافة -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">آخر الحلقات المضافة</h2>
+                    <a href="#" class="more-btn" onclick="showMorePage('latest-episodes')">المزيد</a>
+                </div>
+                <div class="anime-grid" id="latestEpisodes">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <!-- أكثر أنميات الموسم مشاهدة -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">أكثر أنميات الموسم مشاهدة</h2>
+                    <a href="#" class="more-btn" onclick="showMorePage('season-popular')">المزيد</a>
+                </div>
+                <div class="anime-grid" id="seasonPopular">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <!-- آخر الأنميات المضافة -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">آخر الأنميات المضافة</h2>
+                    <a href="#" class="more-btn" onclick="showMorePage('latest-anime')">المزيد</a>
+                </div>
+                <div class="anime-grid" id="latestAnime">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+
+            <!-- أكثر الأنميات مشاهدة -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">أكثر الأنميات مشاهدة</h2>
+                    <a href="#" class="more-btn" onclick="showMorePage('most-watched')">المزيد</a>
+                </div>
+                <div class="anime-grid" id="mostWatched">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة تفاصيل الأنمي -->
+        <div id="anime-details" class="page">
+            <div class="anime-details-page">
+                <div class="video-section">
+                    <div class="video-player">
+                        <video id="animeVideo" controls></video>
+                        <div class="video-placeholder" id="videoPlaceholder">لا يوجد فيديو متاح</div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="more-btn" onclick="playPreviousEpisode()">الحلقة السابقة</button>
+                        <button class="more-btn" onclick="playNextEpisode()">الحلقة التالية</button>
+                        <button class="more-btn" onclick="toggleFullScreen()">ملء الشاشة</button>
+                    </div>
+                    <div class="viewer-count" id="viewerCount">
+                        <span class="live-indicator"></span>
+                        يشاهد الآن: <span id="viewerNumber">0</span> شخص
+                    </div>
+                    
+                    <!-- قسم التعليقات المحسن -->
+                    <div class="comments-section">
+                        <h3>
+                            💬 الشات العام
+                            <span class="comments-count" id="commentsCount">0</span>
+                            <span class="live-chat-indicator">🔴 مباشر</span>
+                        </h3>
+                        
+                        <!-- رسائل النجاح والخطأ -->
+                        <div id="commentMessages" style="display: none;"></div>
+                        
+                        <!-- نموذج التعليق -->
+                        <div class="comment-form" id="commentForm">
+                            <textarea 
+                                id="commentInput" 
+                                placeholder="شارك رأيك في هذا الأنمي... سيراه جميع مشاهدي الأنمي! (الحد الأقصى 500 حرف)"
+                                maxlength="500"
+                            ></textarea>
+                            <div class="comment-form-footer">
+                                <span class="comment-char-count" id="charCount">0/500</span>
+                                <button type="button" onclick="submitComment()" id="submitCommentBtn">إرسال تعليق 💬</button>
+                            </div>
+                        </div>
+                        
+                        <!-- قائمة التعليقات -->
+                        <div class="comments-list" id="commentsList">
+                            <div class="comment-loading">جاري تحميل التعليقات...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="episodes-section">
+                    <h3 class="episodes-title">الحلقات</h3>
+                    <div id="episodeList">
+                        <!-- سيتم تحميل قائمة الحلقات هنا -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة المزيد -->
+        <div id="more-page" class="page">
+            <div class="more-page">
+                <h2 id="morePageTitle">المزيد</h2>
+                <div class="more-grid" id="moreContent">
+                    <!-- سيتم تحميل المحتوى هنا -->
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة قائمة الأنمي -->
+        <div id="anime-list" class="page">
+            <div class="content-section">
+                <h2 class="section-title">قائمة الأنمي الكاملة</h2>
+                <div class="anime-grid" id="fullAnimeList">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة المفضلة -->
+        <div id="favorites" class="page">
+            <div class="content-section">
+                <h2 class="section-title">قائمة المفضلة</h2>
+                <div class="anime-grid" id="favoritesList">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة أنميات الموسم -->
+        <div id="season" class="page">
+            <div class="content-section">
+                <h2 class="section-title">أنميات الموسم الحالي</h2>
+                <div class="anime-grid" id="currentSeasonAnime">
+                    <!-- سيتم تحميل المحتوى بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة مواعيد الحلقات -->
+        <div id="schedule" class="page">
+            <div class="content-section">
+                <h2 class="section-title">مواعيد عرض الحلقات</h2>
+                <p style="text-align: center; color: #e0e0e0;">سيتم عرض مواعيد الحلقات هنا.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تسجيل الدخول -->
+    <div id="loginModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <span class="close-button" onclick="closeLoginModal()">&times;</span>
+            <h2>تسجيل الدخول</h2>
+            <div class="email-verification-notice">
+                ملاحظة: سيتم إرسال رمز التحقق إلى بريدك الإلكتروني (يتطلب خادم حقيقي)
+            </div>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني الحقيقي" required>
+                <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+                <button type="submit">تسجيل الدخول</button>
+            </form>
+            <p>ليس لديك حساب؟ <a href="#" onclick="openRegisterModal(); closeLoginModal();">إنشاء حساب</a></p>
+        </div>
+    </div>
+
+    <!-- مودال إنشاء حساب -->
+    <div id="registerModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <span class="close-button" onclick="closeRegisterModal()">&times;</span>
+            <h2>إنشاء حساب</h2>
+            <div class="email-verification-notice">
+                ملاحظة: يجب استخدام بريد إلكتروني حقيقي للتحقق (يتطلب خادم حقيقي)
+            </div>
+            <form id="registerForm">
+                <input type="text" id="registerUsername" placeholder="اسم المستخدم (3-20 حرف إنجليزي)" required pattern="[a-zA-Z0-9]{3,20}" title="يجب أن يتكون اسم المستخدم من 3 إلى 20 حرفًا إنجليزيًا أو رقمًا.">
+                <input type="email" id="registerEmail" placeholder="البريد الإلكتروني الحقيقي" required>
+                <input type="password" id="registerPassword" placeholder="كلمة المرور" required>
+                <input type="file" id="registerAvatar" accept="image/*" placeholder="صورة المستخدم (اختياري)">
+                <button type="submit">إنشاء حساب</button>
+            </form>
+            <p>لديك حساب بالفعل؟ <a href="#" onclick="openLoginModal(); closeRegisterModal();">تسجيل الدخول</a></p>
+        </div>
+    </div>
+
+    <script>
+        // حماية من أدوات المطور والفحص
+        (function() {
+            'use strict';
+            
+            // منع النقر بالزر الأيمن
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showSecurityWarning();
+                return false;
+            });
+            
+            // منع اختصارات لوحة المفاتيح
+            document.addEventListener('keydown', function(e) {
+                // F12
+                if (e.keyCode === 123) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                // Ctrl+Shift+I
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                // Ctrl+Shift+J
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                // Ctrl+U
+                if (e.ctrlKey && e.keyCode === 85) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+                // Ctrl+Shift+C
+                if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+                    e.preventDefault();
+                    showSecurityWarning();
+                    return false;
+                }
+            });
+            
+            // كشف أدوات المطور
+            let devtools = {
+                open: false,
+                orientation: null
+            };
+            
+            setInterval(function() {
+                if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+                    if (!devtools.open) {
+                        devtools.open = true;
+                        showSecurityWarning();
+                    }
+                } else {
+                    devtools.open = false;
+                }
+            }, 500);
+            
+            // منع السحب والإفلات
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // منع التحديد
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        })();
+        
+        function showSecurityWarning() {
+            document.getElementById('securityWarning').style.display = 'block';
+        }
+        
+        function closeSecurityWarning() {
+            document.getElementById('securityWarning').style.display = 'none';
+        }
+
+        // متغيرات عامة
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let users = JSON.parse(localStorage.getItem('users')) || {};
+        let comments = JSON.parse(localStorage.getItem('globalComments')) || {}; // تغيير إلى globalComments
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+        let pageHistory = ['home'];
+        let currentAnimeId = null;
+        let viewerInterval = null;
+        let chatUpdateInterval = null;
+        let onlineUsers = new Set();
+        let slideIndex = 0;
+        let slideInterval;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+        let lastMessageCount = 0;
+        let lastSubmitTime = 0; // لمنع الإرسال المتكرر
+
+        // بيانات الأنمي المحدثة مع النظام الجديد
+        const animeData = [
+            { 
+                id: 1, 
+                title: "One Piece", 
+                episode: 'الحلقة 1134',
+                categories: ["أكشن", "مغامرات", "كوميديا"],
+                description: "قصة الانمي: مغامرات مونكي دي لوفي وطاقمه في البحث عن الكنز الأسطوري ون بيس",
+                image: 'https://via.placeholder.com/200x250/ff6b35/ffffff?text=One+Piece', 
+                viewers: 0,
+                totalViewers: 15420,
+                pinned: true,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+                    { number: 2, title: "حلقة 2", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+                    { number: 3, title: "حلقة 3", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 2, 
+                title: "Naruto Shippuden", 
+                episode: 'الحلقة 720',
+                categories: ["أكشن", "نينجا", "مغامرات"],
+                description: "قصة الانمي: مغامرات ناروتو أوزوماكي في رحلته ليصبح هوكاجي القرية",
+                image: 'https://via.placeholder.com/200x250/f7931e/ffffff?text=Naruto', 
+                viewers: 0,
+                totalViewers: 12850,
+                pinned: true,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+                    { number: 2, title: "حلقة 2", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 3, 
+                title: "My Hero Academia", 
+                episode: 'الحلقة 138',
+                categories: ["أكشن", "مدرسي", "أبطال خارقين"],
+                description: "قصة الانمي: في عالم يمتلك فيه معظم الناس قوى خارقة، يسعى ديكو ليصبح بطلاً خارقاً",
+                image: 'https://via.placeholder.com/200x250/4caf50/ffffff?text=MHA', 
+                viewers: 0,
+                totalViewers: 9870,
+                pinned: true,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 4, 
+                title: "Death Note", 
+                episode: 'الحلقة 37',
+                categories: ["إثارة", "غموض", "نفسي"],
+                description: "قصة الانمي: طالب عبقري يجد مذكرة الموت ويقرر استخدامها لتطهير العالم من المجرمين",
+                image: 'https://via.placeholder.com/200x250/424242/ffffff?text=Death+Note', 
+                viewers: 0,
+                totalViewers: 8950,
+                pinned: true,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 5, 
+                title: "Attack on Titan", 
+                episode: 'الحلقة 87',
+                categories: ["أكشن", "دراما", "رعب"],
+                description: "قصة الانمي: البشرية تحارب العمالقة الذين يهددون وجودها",
+                image: 'https://via.placeholder.com/200x250/e91e63/ffffff?text=AOT', 
+                viewers: 0,
+                totalViewers: 11200,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 6, 
+                title: "Demon Slayer", 
+                episode: 'الحلقة 44',
+                categories: ["أكشن", "خارق للطبيعة", "تاريخي"],
+                description: "قصة الانمي: تانجيرو يسعى لإنقاذ أخته من لعنة الشياطين",
+                image: 'https://via.placeholder.com/200x250/9c27b0/ffffff?text=Demon+Slayer', 
+                viewers: 0,
+                totalViewers: 10500,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 7, 
+                title: "Jujutsu Kaisen", 
+                episode: 'الحلقة 24',
+                categories: ["أكشن", "خارق للطبيعة", "مدرسي"],
+                description: "قصة الانمي: يوجي يدخل عالم السحرة لمحاربة اللعنات",
+                image: 'https://via.placeholder.com/200x250/3f51b5/ffffff?text=JJK', 
+                viewers: 0,
+                totalViewers: 9200,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 8, 
+                title: "Hunter x Hunter", 
+                episode: 'الحلقة 148',
+                categories: ["أكشن", "مغامرات", "خيال"],
+                description: "قصة الانمي: جون يبحث عن والده الصياد الأسطوري",
+                image: 'https://via.placeholder.com/200x250/00bcd4/ffffff?text=HxH', 
+                viewers: 0,
+                totalViewers: 7800,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 9, 
+                title: "Dragon Ball Super", 
+                episode: 'الحلقة 131',
+                categories: ["أكشن", "قتال", "خيال علمي"],
+                description: "قصة الانمي: مغامرات جوكو الجديدة في الأكوان المتعددة",
+                image: 'https://via.placeholder.com/200x250/ff9800/ffffff?text=DBS', 
+                viewers: 0,
+                totalViewers: 13500,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 10, 
+                title: "Tokyo Ghoul", 
+                episode: 'الحلقة 48',
+                categories: ["أكشن", "رعب", "خارق للطبيعة"],
+                description: "قصة الانمي: كانيكي يتحول إلى غول ويحاول التأقلم مع حياته الجديدة",
+                image: 'https://via.placeholder.com/200x250/795548/ffffff?text=Tokyo+Ghoul', 
+                viewers: 0,
+                totalViewers: 6900,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 11, 
+                title: "Bleach", 
+                episode: 'الحلقة 366',
+                categories: ["أكشن", "خارق للطبيعة", "مغامرات"],
+                description: "قصة الانمي: إيتشيجو يصبح حاصد أرواح ويحارب الهولو",
+                image: 'https://via.placeholder.com/200x250/607d8b/ffffff?text=Bleach', 
+                viewers: 0,
+                totalViewers: 8200,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            { 
+                id: 12, 
+                title: "Fullmetal Alchemist", 
+                episode: 'الحلقة 64',
+                categories: ["أكشن", "مغامرات", "دراما"],
+                description: "قصة الانمي: الأخوان إلريك يبحثان عن حجر الفيلسوف لاستعادة أجسادهما",
+                image: 'https://via.placeholder.com/200x250/8bc34a/ffffff?text=FMA', 
+                viewers: 0,
+                totalViewers: 7500,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+                ]
+            },
+            {
+                id: 60,
+                title: "Tokyo Ghoul:re 2nd Season",
+                categories: ["أكشن", "انميات جديده", "رعب"],
+                description: "قصة الانمي : الموسم الثاني من انمي Tokyo Ghoul:re ",
+                image: "https://app.sanime.net/api/anime/2936/image.jpg",
+                episode: 'الحلقة 1',
+                viewers: 0,
+                totalViewers: 5200,
+                pinned: false,
+                episodes: [
+                    { number: 1, title: "حلقة 1", url: "https://server.sanime.net/Video3/2936/1.mp4" }
+                ]
+            }
+        ];
+
+        // متغيرات للحلقات
+        let currentEpisode = 1;
+
+        // وظيفة عرض الصفحات
+        function showPage(pageId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            // تحميل المحتوى حسب الصفحة
+            if (pageId === 'anime-list') {
+                loadFullAnimeList();
+            } else if (pageId === 'home') {
+                loadAnimeSections();
+            } else if (pageId === 'favorites') {
+                loadFavorites();
+            }
+
+            // إضافة الصفحة لتاريخ التنقل
+            if (pageHistory[pageHistory.length - 1] !== pageId) {
+                pageHistory.push(pageId);
+            }
+
+            // إظهار زر العودة إذا لم تكن الصفحة الرئيسية
+            if (pageId !== 'home') {
+                document.getElementById('backBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('backBtn').style.display = 'none';
+            }
+
+            // تحديث حالة الأزرار في شريط التنقل
+            document.querySelectorAll('.nav-item a').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`.nav-item a[onclick="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // وظيفة العودة
+        function goBack() {
+            if (pageHistory.length > 1) {
+                pageHistory.pop(); // إزالة الصفحة الحالية
+                const previousPage = pageHistory[pageHistory.length - 1];
+                showPage(previousPage);
+            }
+        }
+
+        // وظيفة لعرض صفحة المزيد
+        function showMorePage(type) {
+            let title = '';
+            let content = [];
+
+            switch(type) {
+                case 'latest-episodes':
+                    title = 'آخر الحلقات المضافة';
+                    content = animeData.slice().reverse();
+                    break;
+                case 'season-popular':
+                    title = 'أكثر أنميات الموسم مشاهدة';
+                    content = [...animeData].sort((a, b) => b.totalViewers - a.totalViewers);
+                    break;
+                case 'latest-anime':
+                    title = 'آخر الأنميات المضافة';
+                    content = animeData.slice().reverse();
+                    break;
+                case 'most-watched':
+                    title = 'أكثر الأنميات مشاهدة';
+                    content = [...animeData].sort((a, b) => b.totalViewers - a.totalViewers);
+                    break;
+            }
+
+            document.getElementById('morePageTitle').innerText = title;
+            document.getElementById('moreContent').innerHTML = content.map(createAnimeCard).join('');
+            showPage('more-page');
+        }
+
+        // وظيفة لإنشاء بطاقة الأنمي بدون زر الإعجاب
+        function createAnimeCard(anime) {
+            const hasRealImage = anime.image && !anime.image.includes('placeholder');
+            const imageText = hasRealImage ? '' : anime.title;
+            const episodeInfo = anime.episode || 'لا توجد حلقات';
+            
+            return `
+                <div class="anime-card" onclick="showAnimeDetails(${anime.id})">
+                    <div class="anime-image" style="background-image: url('${anime.image}');">
+                        ${imageText}
+                    </div>
+                    <div class="anime-info">
+                        <div class="anime-title">${anime.title || 'بدون عنوان'}</div>
+                        <div class="anime-episode">${episodeInfo}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // وظيفة تحميل المفضلة - محذوفة مؤقتاً
+        function loadFavorites() {
+            const favoritesList = document.getElementById('favoritesList');
+            favoritesList.innerHTML = '<p class="no-content">ميزة المفضلة غير متاحة حالياً</p>';
+        }
+
+        // وظيفة لتحميل الأنميات في الأقسام المختلفة
+        function loadAnimeSections() {
+            // آخر الحلقات المضافة (أول 4 أنميات)
+            const latestEpisodes = animeData.slice().reverse().slice(0, 4);
+            document.getElementById('latestEpisodes').innerHTML = latestEpisodes.map(createAnimeCard).join('');
+
+            // أكثر أنميات الموسم مشاهدة (ترتيب حسب المشاهدين - أول 4)
+            const seasonPopular = [...animeData].sort((a, b) => b.totalViewers - a.totalViewers).slice(0, 4);
+            document.getElementById('seasonPopular').innerHTML = seasonPopular.map(createAnimeCard).join('');
+
+            // آخر الأنميات المضافة (أول 4 أنميات)
+            const latestAnime = animeData.slice().reverse().slice(0, 4);
+            document.getElementById('latestAnime').innerHTML = latestAnime.map(createAnimeCard).join('');
+
+            // أكثر الأنميات مشاهدة (ترتيب حسب المشاهدين - أول 4)
+            const mostWatched = [...animeData].sort((a, b) => b.totalViewers - a.totalViewers).slice(0, 4);
+            document.getElementById('mostWatched').innerHTML = mostWatched.map(createAnimeCard).join('');
+
+            // قائمة الأنمي الكاملة
+            document.getElementById('fullAnimeList').innerHTML = animeData.map(createAnimeCard).join('');
+            document.getElementById('currentSeasonAnime').innerHTML = animeData.map(createAnimeCard).join('');
+        }
+
+        // وظيفة لتحميل قائمة الأنمي الكاملة
+        function loadFullAnimeList() {
+            document.getElementById('fullAnimeList').innerHTML = animeData.map(createAnimeCard).join('');
+        }
+
+        // وظيفة لعرض تفاصيل الأنمي
+        function showAnimeDetails(animeId) {
+            currentAnimeId = animeId;
+            const anime = animeData.find(a => a.id === animeId);
+            if (!anime) return;
+
+            showPage('anime-details');
+            currentEpisode = 1;
+
+            // إضافة المستخدم الحالي للمشاهدين إذا كان مسجل دخول
+            if (currentUser) {
+                onlineUsers.add(currentUser.email);
+            }
+            
+            // زيادة عداد المشاهدين عند دخول الأنمي
+            anime.viewers = Math.max(anime.viewers + 1, onlineUsers.size);
+
+            // بدء تتبع المشاهدين الحقيقي
+            startRealViewerTracking(animeId);
+            
+            // بدء التحديث التلقائي للدردشة
+            startChatAutoUpdate();
+
+            // تحديث الفيديو
+            const videoPlayer = document.getElementById('animeVideo');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            if (anime.episodes && anime.episodes.length > 0) {
+                videoPlayer.src = anime.episodes[0].url;
+                videoPlayer.style.display = 'block';
+                videoPlaceholder.style.display = 'none';
+                videoPlayer.load();
+            } else {
+                videoPlayer.style.display = 'none';
+                videoPlaceholder.style.display = 'flex';
+            }
+
+            // تحميل قائمة الحلقات
+            const episodeListDiv = document.getElementById('episodeList');
+            episodeListDiv.innerHTML = '';
+            if (anime.episodes) {
+                anime.episodes.forEach((episode, index) => {
+                    const episodeItem = document.createElement('div');
+                    episodeItem.classList.add('episode-item');
+                    episodeItem.innerText = episode.title;
+                    episodeItem.onclick = () => playEpisode(animeId, index + 1);
+                    episodeListDiv.appendChild(episodeItem);
+                });
+            }
+
+            loadComments();
+        }
+
+        // وظيفة تحديث عداد المشاهدين للأنمي الحالي (محاكاة مستخدمين حقيقيين)
+        function updateViewerCount() {
+            if (!currentAnimeId) return;
+            
+            const anime = animeData.find(a => a.id === currentAnimeId);
+            if (!anime) return;
+            
+            // إنشاء مفتاح للأنمي الحالي
+            const animeKey = `anime_${currentAnimeId}`;
+            
+            // تحميل البيانات المحفوظة
+            let animeViewers = {};
+            const savedViewers = localStorage.getItem('animeViewers');
+            if (savedViewers) {
+                try {
+                    animeViewers = JSON.parse(savedViewers);
+                } catch (e) {
+                    animeViewers = {};
+                }
+            }
+            
+            // إذا لم يكن هناك عداد للأنمي، ابدأ بعدد أساسي واقعي
+            if (!animeViewers[animeKey]) {
+                // عدد أساسي بناءً على شعبية الأنمي (محاكاة مستخدمين حقيقيين)
+                let baseCount = 1; // المستخدم الحالي
+                
+                // إضافة مستخدمين آخرين بناءً على شعبية الأنمي
+                if (anime.title.includes('One Piece') || anime.title.includes('Naruto')) {
+                    baseCount += Math.floor(Math.random() * 25) + 15; // 16-40 مشاهد للأنمي الشعبي جداً
+                } else if (anime.title.includes('Dragon Ball') || anime.title.includes('Attack on Titan')) {
+                    baseCount += Math.floor(Math.random() * 20) + 10; // 11-30 مشاهد للأنمي الشعبي
+                } else if (anime.title.includes('Tokyo Ghoul') || anime.title.includes('Bleach')) {
+                    baseCount += Math.floor(Math.random() * 15) + 5; // 6-20 مشاهد
+                } else {
+                    baseCount += Math.floor(Math.random() * 10) + 2; // 3-12 مشاهد للأنمي العادي
+                }
+                
+                animeViewers[animeKey] = baseCount;
+            }
+            
+            // محاكاة دخول وخروج المستخدمين بشكل طبيعي
+            const currentTime = Date.now();
+            const lastUpdate = animeViewers[`${animeKey}_lastUpdate`] || currentTime;
+            const timeDiff = currentTime - lastUpdate;
+            
+            // إذا مر وقت كافي، قم بتحديث العداد
+            if (timeDiff > 3000) { // كل 3 ثوانٍ
+                // احتمال دخول مستخدمين جدد (أعلى في أوقات الذروة)
+                const hour = new Date().getHours();
+                let joinChance = 0.3; // احتمال أساسي 30%
+                
+                // زيادة الاحتمال في أوقات الذروة (مساءً)
+                if (hour >= 18 && hour <= 23) {
+                    joinChance = 0.5; // 50% في المساء
+                } else if (hour >= 14 && hour <= 17) {
+                    joinChance = 0.4; // 40% بعد الظهر
+                }
+                
+                // دخول مستخدمين جدد
+                if (Math.random() < joinChance) {
+                    const newViewers = Math.floor(Math.random() * 3) + 1; // 1-3 مستخدمين جدد
+                    animeViewers[animeKey] += newViewers;
+                }
+                
+                // خروج بعض المستخدمين (احتمال أقل)
+                if (Math.random() < 0.2 && animeViewers[animeKey] > 3) { // 20% احتمال للخروج
+                    const leavingViewers = Math.floor(Math.random() * 2) + 1; // 1-2 مستخدم يغادر
+                    animeViewers[animeKey] = Math.max(1, animeViewers[animeKey] - leavingViewers);
+                }
+                
+                // تحديث وقت آخر تحديث
+                animeViewers[`${animeKey}_lastUpdate`] = currentTime;
+            }
+            
+            // تحديث العرض
+            const viewerNumberSpan = document.getElementById('viewerNumber');
+            if (viewerNumberSpan) {
+                viewerNumberSpan.textContent = animeViewers[animeKey];
+            }
+            
+            // حفظ في localStorage
+            localStorage.setItem('animeViewers', JSON.stringify(animeViewers));
+            
+            // تحديث عداد الأنمي نفسه
+            anime.viewers = animeViewers[animeKey];
+        }
+
+        // وظيفة لبدء تتبع المشاهدين الحقيقي
+        function startRealViewerTracking(animeId) {
+            // إيقاف أي تتبع سابق
+            if (viewerInterval) {
+                clearInterval(viewerInterval);
+            }
+
+            // تحديث العداد فوراً
+            updateViewerCount();
+
+            // تحديث العداد كل 3 ثوانٍ
+            viewerInterval = setInterval(() => {
+                updateViewerCount();
+            }, 3000);
+        }
+
+        // وظيفة لإيقاف تتبع المشاهدين
+        function stopRealViewerTracking() {
+            if (viewerInterval) {
+                clearInterval(viewerInterval);
+                viewerInterval = null;
+            }
+            // إيقاف التحديث التلقائي للدردشة أيضاً
+            stopChatAutoUpdate();
+        }
+
+        // وظيفة لتشغيل حلقة معينة
+        function playEpisode(animeId, episodeNumber) {
+            const anime = animeData.find(a => a.id === animeId);
+            if (!anime || !anime.episodes) return;
+
+            currentEpisode = episodeNumber;
+            const episode = anime.episodes[episodeNumber - 1];
+            if (!episode) return;
+
+            const videoPlayer = document.getElementById('animeVideo');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+
+            videoPlayer.src = episode.url;
+            videoPlayer.style.display = 'block';
+            videoPlaceholder.style.display = 'none';
+            videoPlayer.load();
+            videoPlayer.play();
+
+            // تحديث الحلقة النشطة في القائمة
+            document.querySelectorAll('.episode-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`#episodeList div:nth-child(${episodeNumber})`).classList.add('active');
+
+            // تحديث عدد المشاهدين
+            updateViewerCount();
+        }
+
+        // وظائف التحكم بالفيديو
+        function playPreviousEpisode() {
+            const anime = animeData.find(a => a.id === currentAnimeId);
+            if (!anime || !anime.episodes) return;
+
+            if (currentEpisode > 1) {
+                playEpisode(currentAnimeId, currentEpisode - 1);
+            } else {
+                showMessage('هذه أول حلقة', 'error');
+            }
+        }
+
+        function playNextEpisode() {
+            const anime = animeData.find(a => a.id === currentAnimeId);
+            if (!anime || !anime.episodes) return;
+
+            if (currentEpisode < anime.episodes.length) {
+                playEpisode(currentAnimeId, currentEpisode + 1);
+            } else {
+                showMessage('انتهت الحلقات', 'error');
+            }
+        }
+
+        function toggleFullScreen() {
+            const videoPlayer = document.getElementById('animeVideo');
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.mozRequestFullScreen) {
+                videoPlayer.mozRequestFullScreen();
+            } else if (videoPlayer.webkitRequestFullscreen) {
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) {
+                videoPlayer.msRequestFullscreen();
+            }
+        }
+
+        // وظائف السلايدر المحسنة مع دعم السحب
+        function showSlides(n) {
+            const slidesWrapper = document.getElementById('slidesWrapper');
+            const indicators = document.getElementsByClassName("indicator");
+            const totalSlides = 4;
+            
+            if (n >= totalSlides) { slideIndex = 0 }
+            if (n < 0) { slideIndex = totalSlides - 1 }
+            
+            const translateX = -slideIndex * 25; // 25% لكل شريحة
+            slidesWrapper.style.transform = `translateX(${translateX}%)`;
+            
+            // تحديث المؤشرات
+            for (let i = 0; i < indicators.length; i++) {
+                indicators[i].classList.remove('active');
+            }
+            indicators[slideIndex].classList.add('active');
+        }
+
+        function changeSlide(n) {
+            slideIndex += n;
+            showSlides(slideIndex);
+        }
+
+        function currentSlide(n) {
+            slideIndex = n - 1;
+            showSlides(slideIndex);
+        }
+
+        // إضافة دعم السحب المحسن للسلايدر
+        function initSliderTouch() {
+            const slider = document.getElementById('heroSlider');
+            
+            // دعم اللمس للهواتف
+            slider.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+                isDragging = true;
+            });
+
+            slider.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+            });
+
+            slider.addEventListener('touchend', function(e) {
+                if (!isDragging) return;
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+                isDragging = false;
+            });
+
+            // دعم الماوس للكمبيوتر
+            slider.addEventListener('mousedown', function(e) {
+                touchStartX = e.screenX;
+                isDragging = true;
+                slider.style.cursor = 'grabbing';
+                slider.addEventListener('mousemove', handleMouseMove);
+                e.preventDefault();
+            });
+
+            slider.addEventListener('mouseup', function(e) {
+                if (!isDragging) return;
+                touchEndX = e.screenX;
+                slider.removeEventListener('mousemove', handleMouseMove);
+                handleSwipe();
+                isDragging = false;
+                slider.style.cursor = 'grab';
+            });
+
+            slider.addEventListener('mouseleave', function(e) {
+                if (!isDragging) return;
+                slider.removeEventListener('mousemove', handleMouseMove);
+                isDragging = false;
+                slider.style.cursor = 'grab';
+            });
+
+            function handleMouseMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+            }
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        // سحب لليسار - الشريحة التالية
+                        changeSlide(1);
+                    } else {
+                        // سحب لليمين - الشريحة السابقة
+                        changeSlide(-1);
+                    }
+                }
+            }
+        }
+
+        // وظائف البحث
+        function searchAnime() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm.length === 0) return;
+
+            const searchResults = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(searchTerm) ||
+                anime.categories.some(cat => cat.toLowerCase().includes(searchTerm))
+            );
+
+            if (searchResults.length > 0) {
+                document.getElementById('morePageTitle').innerText = `نتائج البحث عن "${searchTerm}"`;
+                document.getElementById('moreContent').innerHTML = searchResults.map(createAnimeCard).join('');
+                showPage('more-page');
+            } else {
+                showMessage(`لم يتم العثور على نتائج لـ "${searchTerm}"`, 'error');
+            }
+        }
+
+        // وظائف تسجيل الدخول/التسجيل
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const userAuthDiv = document.getElementById('userAuth');
+        const userInfoDiv = document.getElementById('userInfo');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const userAvatar = document.getElementById('userAvatar');
+
+        function openLoginModal() {
+            loginModal.style.display = 'block';
+            // تحميل البيانات المحفوظة إن وجدت
+            const savedData = JSON.parse(localStorage.getItem('savedLoginData'));
+            if (savedData) {
+                document.getElementById('loginEmail').value = savedData.email;
+                document.getElementById('loginPassword').value = savedData.password;
+            }
+        }
+
+        function closeLoginModal() {
+            loginModal.style.display = 'none';
+        }
+
+        function openRegisterModal() {
+            registerModal.style.display = 'block';
+        }
+
+        function closeRegisterModal() {
+            registerModal.style.display = 'none';
+        }
+
+        // التحقق من صحة البريد الإلكتروني
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // معالجة تسجيل الدخول
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!isValidEmail(email)) {
+                showMessage('يرجى إدخال بريد إلكتروني صحيح.', 'error');
+                return;
+            }
+
+            if (users[email] && users[email].password === password) {
+                // تسجيل دخول مباشر مع حفظ تلقائي
+                currentUser = { 
+                    email: email, 
+                    username: users[email].username,
+                    avatar: users[email].avatar || 'https://via.placeholder.com/40x40/6495ed/ffffff?text=' + users[email].username.charAt(0).toUpperCase()
+                };
+                
+                // حفظ بيانات المستخدم والدخول تلقائياً
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('savedLoginData', JSON.stringify({ email, password }));
+                
+                onlineUsers.add(email);
+                updateAuthUI();
+                closeLoginModal();
+                showMessage('تم تسجيل الدخول بنجاح! 🎉', 'success');
+            } else {
+                showMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة.', 'error');
+            }
+        });
+
+        // معالجة إنشاء حساب
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const avatarFile = document.getElementById('registerAvatar').files[0];
+
+            // التحقق من اسم المستخدم
+            const usernameRegex = /^[a-zA-Z0-9]{3,20}$/;
+            if (!usernameRegex.test(username)) {
+                showMessage('اسم المستخدم يجب أن يتكون من 3 إلى 20 حرفًا إنجليزيًا أو رقمًا فقط.', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showMessage('يرجى إدخال بريد إلكتروني صحيح.', 'error');
+                return;
+            }
+
+            if (users[email]) {
+                showMessage('هذا البريد الإلكتروني مسجل بالفعل.', 'error');
+            } else {
+                let avatarUrl = 'https://via.placeholder.com/40x40/6495ed/ffffff?text=' + username.charAt(0).toUpperCase();
+                
+                // معالجة صورة المستخدم
+                if (avatarFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarUrl = e.target.result;
+                        completeRegistration();
+                    };
+                    reader.readAsDataURL(avatarFile);
+                } else {
+                    completeRegistration();
+                }
+
+                function completeRegistration() {
+                    users[email] = { 
+                        username: username, 
+                        password: password,
+                        avatar: avatarUrl
+                    };
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // تسجيل دخول تلقائي مع حفظ البيانات
+                    currentUser = { 
+                        email: email, 
+                        username: username,
+                        avatar: avatarUrl
+                    };
+                    
+                    // حفظ بيانات المستخدم والدخول تلقائياً
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    localStorage.setItem('savedLoginData', JSON.stringify({ email, password }));
+                    
+                    onlineUsers.add(email);
+                    updateAuthUI();
+                    closeRegisterModal();
+                    showMessage('تم إنشاء الحساب وتسجيل الدخول بنجاح! 🎉', 'success');
+                }
+            }
+        });
+
+        // تسجيل الخروج المحسن
+        function logout() {
+            if (currentUser) {
+                // حفظ بيانات الحساب للدخول السريع تلقائياً
+                const loginData = {
+                    email: currentUser.email,
+                    password: users[currentUser.email].password
+                };
+                localStorage.setItem('savedLoginData', JSON.stringify(loginData));
+                
+                // إزالة المستخدم من المتصلين
+                onlineUsers.delete(currentUser.email);
+                
+                // مسح بيانات الجلسة الحالية
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                
+                // تحديث واجهة المستخدم
+                updateAuthUI();
+                
+                // إيقاف تتبع المشاهدين
+                stopRealViewerTracking();
+                
+                // إظهار رسالة تأكيد
+                showMessage('تم تسجيل الخروج بنجاح. تم حفظ حسابك للدخول السريع لاحقاً! 👋', 'success');
+                
+                // العودة للصفحة الرئيسية
+                showPage('home');
+            }
+        }
+
+        // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    if (currentUser && currentUser.email) {
+                        // التحقق من صحة البيانات المحفوظة
+                        if (users[currentUser.email]) {
+                            onlineUsers.add(currentUser.email);
+                            updateAuthUI();
+                            return true;
+                        }
+                    }
+                } catch (e) {
+                    console.error('خطأ في قراءة بيانات المستخدم المحفوظة:', e);
+                }
+            }
+            
+            return false;
+        }
+
+        function updateAuthUI() {
+            if (currentUser) {
+                userAuthDiv.style.display = 'none';
+                userInfoDiv.style.display = 'flex';
+                usernameDisplay.innerText = currentUser.username;
+                userAvatar.src = currentUser.avatar;
+            } else {
+                userAuthDiv.style.display = 'flex';
+                userInfoDiv.style.display = 'none';
+            }
+        }
+
+        // وظائف التعليقات العامة - شات عام للجميع
+        function loadComments() {
+            const commentsListDiv = document.getElementById('commentsList');
+            const commentsCountSpan = document.getElementById('commentsCount');
+            
+            // إظهار رسالة التحميل
+            commentsListDiv.innerHTML = '<div class="comment-loading">جاري تحميل التعليقات...</div>';
+            
+            // تحميل جميع التعليقات العامة من localStorage
+            const savedComments = localStorage.getItem('globalComments');
+            let allComments = [];
+            if (savedComments) {
+                try {
+                    const parsedComments = JSON.parse(savedComments);
+                    // جمع جميع التعليقات من جميع الأنميات في مصفوفة واحدة
+                    allComments = parsedComments.global || [];
+                } catch (e) {
+                    console.error('خطأ في قراءة التعليقات:', e);
+                    allComments = [];
+                }
+            }
+            
+            commentsCountSpan.textContent = allComments.length;
+            lastMessageCount = allComments.length;
+
+            if (allComments.length === 0) {
+                commentsListDiv.innerHTML = `<p style="text-align: center; color: #aaa; padding: 20px;">💬 لا توجد تعليقات بعد. كن أول من يعلق!</p>`;
+                return;
+            }
+
+            // ترتيب التعليقات من الأقدم للأحدث
+            allComments.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            commentsListDiv.innerHTML = '';
+            allComments.forEach(comment => {
+                const commentItem = document.createElement('div');
+                commentItem.classList.add('comment-item');
+                commentItem.innerHTML = `
+                    <img class="comment-avatar" src="${comment.avatar}" alt="صورة المستخدم">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <div class="comment-author">${comment.username}</div>
+                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                        </div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
+                `;
+                commentsListDiv.appendChild(commentItem);
+            });
+            
+            // التمرير لأسفل لإظهار أحدث التعليقات
+            setTimeout(() => {
+                commentsListDiv.scrollTop = commentsListDiv.scrollHeight;
+            }, 100);
+        }
+
+        // دالة التحديث التلقائي للشات العام
+        function startChatAutoUpdate() {
+            // إيقاف أي تحديث سابق
+            if (chatUpdateInterval) {
+                clearInterval(chatUpdateInterval);
+            }
+            
+            // تحديث التعليقات كل 3 ثوانٍ
+            chatUpdateInterval = setInterval(() => {
+                // إعادة تحميل التعليقات من localStorage
+                const savedComments = localStorage.getItem('globalComments');
+                let allComments = [];
+                if (savedComments) {
+                    try {
+                        const parsedComments = JSON.parse(savedComments);
+                        allComments = parsedComments.global || [];
+                    } catch (e) {
+                        console.error('خطأ في قراءة التعليقات:', e);
+                        return;
+                    }
+                }
+                
+                const currentMessageCount = allComments.length;
+                
+                // إذا كان هناك تعليقات جديدة، حدث العرض
+                if (currentMessageCount > lastMessageCount) {
+                    loadComments();
+                    // إظهار إشعار بالتعليقات الجديدة
+                    showMessage(`📩 ${currentMessageCount - lastMessageCount} تعليق جديد!`, 'success');
+                }
+            }, 3000);
+        }
+
+        // إرسال التعليق للشات العام
+        function submitComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            
+            if (!currentUser) {
+                showMessage('يجب تسجيل الدخول أولاً لإرسال تعليق', 'error');
+                return;
+            }
+            
+            if (!commentText) {
+                showMessage('يرجى كتابة تعليق قبل الإرسال', 'error');
+                return;
+            }
+            
+            if (commentText.length > 500) {
+                showMessage('التعليق طويل جداً. الحد الأقصى 500 حرف', 'error');
+                return;
+            }
+            
+            // منع الإرسال المتكرر
+            const currentTime = Date.now();
+            if (currentTime - lastSubmitTime < 1000) {
+                showMessage('يرجى الانتظار قليلاً قبل إرسال تعليق آخر', 'error');
+                return;
+            }
+            
+            // منع الإرسال المتعدد
+            const submitBtn = document.getElementById('submitCommentBtn');
+            if (submitBtn.disabled) {
+                return;
+            }
+            
+            try {
+                // تعطيل الزر لمنع الإرسال المزدوج
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'جاري الإرسال...';
+                
+                const newComment = {
+                    username: currentUser.username || 'مستخدم',
+                    text: commentText,
+                    avatar: currentUser.avatar || 'https://via.placeholder.com/40x40/6495ed/ffffff?text=U',
+                    timestamp: new Date().toISOString()
+                };
+
+                // تحميل التعليقات الحالية
+                const savedComments = localStorage.getItem('globalComments');
+                let allComments = { global: [] };
+                if (savedComments) {
+                    try {
+                        allComments = JSON.parse(savedComments);
+                        if (!allComments.global) {
+                            allComments.global = [];
+                        }
+                    } catch (e) {
+                        allComments = { global: [] };
+                    }
+                }
+
+                // إضافة التعليق الجديد للشات العام
+                allComments.global.push(newComment);
+                
+                // حفظ في localStorage
+                localStorage.setItem('globalComments', JSON.stringify(allComments));
+                
+                // تحديث وقت آخر إرسال
+                lastSubmitTime = currentTime;
+                
+                // مسح النص من المربع
+                commentInput.value = '';
+                updateCharCount();
+                
+                // إعادة تحميل التعليقات لإظهار التعليق الجديد
+                loadComments();
+                
+                // إظهار رسالة نجاح
+                showMessage(`تم إرسال تعليقك بنجاح! سيراه جميع المستخدمين 💬`, 'success');
+                
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                showMessage('حدث خطأ أثناء إرسال التعليق. يرجى المحاولة مرة أخرى.', 'error');
+            } finally {
+                // إعادة تفعيل الزر بعد ثانية واحدة
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'إرسال تعليق 💬';
+                }, 1000);
+            }
+        }
+
+        // إيقاف التحديث التلقائي للتعليقات
+        function stopChatAutoUpdate() {
+            if (chatUpdateInterval) {
+                clearInterval(chatUpdateInterval);
+                chatUpdateInterval = null;
+            }
+        }
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const commentTime = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - commentTime) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return 'الآن';
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `منذ ${minutes} دقيقة`;
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `منذ ${hours} ساعة`;
+            } else {
+                const days = Math.floor(diffInSeconds / 86400);
+                return `منذ ${days} يوم`;
+            }
+        }
+
+        // وظيفة عرض الرسائل
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('commentMessages');
+            
+            // إظهار الرسائل الإيجابية فقط
+            if (type === 'success') {
+                messagesDiv.style.display = 'block';
+                const messageElement = document.createElement('div');
+                messageElement.className = `comment-${type}`;
+                messageElement.textContent = message;
+                
+                messagesDiv.innerHTML = '';
+                messagesDiv.appendChild(messageElement);
+                
+                // إزالة الرسالة بعد 3 ثوانٍ
+                setTimeout(() => {
+                    messageElement.remove();
+                    messagesDiv.style.display = 'none';
+                }, 3000);
+            } else {
+                // للأخطاء، اعرضها في console فقط
+                console.error(message);
+            }
+        }
+
+        // وظيفة تحديث عداد الأحرف
+        function updateCharCount() {
+            const commentInput = document.getElementById('commentInput');
+            const charCount = document.getElementById('charCount');
+            const currentLength = commentInput.value.length;
+            
+            charCount.textContent = `${currentLength}/500`;
+            
+            if (currentLength > 450) {
+                charCount.className = 'comment-char-count error';
+            } else if (currentLength > 400) {
+                charCount.className = 'comment-char-count warning';
+            } else {
+                charCount.className = 'comment-char-count';
+            }
+        }
+
+        // إغلاق المودالات عند النقر خارجها
+        window.onclick = function(event) {
+            if (event.target == loginModal) {
+                closeLoginModal();
+            }
+            if (event.target == registerModal) {
+                closeRegisterModal();
+            }
+        }
+
+        // تهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            // تحميل البيانات المحفوظة
+            checkLoginStatus();
+            
+            loadAnimeSections();
+            updateAuthUI();
+            initSliderTouch();
+            
+            // إضافة المستخدم الحالي للمتصلين إذا كان مسجل دخول
+            if (currentUser) {
+                onlineUsers.add(currentUser.email);
+            }
+            
+            // تشغيل السلايدر تلقائيا
+            showSlides(slideIndex);
+            slideInterval = setInterval(() => changeSlide(1), 5000);
+            
+            // إضافة مستمع للبحث عند الضغط على Enter
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchAnime();
+                }
+            });
+            
+            // إضافة مستمع لعداد الأحرف في التعليقات
+            document.getElementById('commentInput').addEventListener('input', updateCharCount);
+            
+            // إضافة مستمع مباشر لزر إرسال التعليق
+            const submitBtn = document.getElementById('submitCommentBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    submitComment();
+                });
+            }
+            
+            // تحديث عداد الأحرف الأولي
+            updateCharCount();
+        });
+
+        // وظيفة مشاهدة الأنمي من السلايدر
+        function watchAnime(animeId, episodeNumber) {
+            showAnimeDetails(animeId);
+            // تشغيل الحلقة المحددة
+            setTimeout(() => {
+                playEpisode(animeId, episodeNumber);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
+
